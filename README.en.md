@@ -4,10 +4,10 @@
 > Idempotent. Modern. China-friendly.
 
 [![Platform](https://img.shields.io/badge/platform-WSL2%20%7C%20Ubuntu%2024.04+-blue)](https://learn.microsoft.com/en-us/windows/wsl/)
-[![Shell](https://img.shields.io/badge/shell-zsh%20%2B%20starship-purple)](https://starship.rs)
-[![Python](https://img.shields.io/badge/python-uv%20%2B%20ruff-yellow)](https://docs.astral.sh/uv/)
-[![Version](https://img.shields.io/badge/multi--lang-mise-orange)](https://mise.jdx.dev)
-[![AI](https://img.shields.io/badge/AI-OpenCode-green)](https://opencode.ai)
+[![CI](https://github.com/Wind-t/devtoolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/Wind-t/devtoolkit/actions)
+[![ShellCheck](https://img.shields.io/badge/ShellCheck-passing-brightgreen)](https://www.shellcheck.net)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/Wind-t/devtoolkit/releases)
 
 English | [中文](README.md)
 
