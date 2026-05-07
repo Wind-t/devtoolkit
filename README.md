@@ -47,7 +47,7 @@
 | 信息 | fastfetch | 系统信息展示（neofetch 替代） |
 | Docker | lazydocker | Docker TUI（lazygit 伴侣） |
 | AI | OpenCode | 终端 AI 编程助手 |
-| 其他 | atuin + fastfetch | shell 历史同步 + 系统信息 |
+| 其他 | atuin | shell 历史同步 |
 
 **Shell 函数：**
 
@@ -84,7 +84,7 @@ bash ~/.local/share/devtoolkit/bootstrap.sh
 
 ```bash
 exec zsh
-bash ~/.local/share/devtoolkit/verify.sh   # 50 项检查，应该全绿
+bash ~/.local/share/devtoolkit/verify.sh   # 60+ 项检查，应该全绿
 ```
 
 ### 第三步 — 配置 OpenCode（可选）

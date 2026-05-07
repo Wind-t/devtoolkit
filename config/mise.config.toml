@@ -18,10 +18,10 @@ trusted_config_paths = ["~/.config/mise"]
 jobs = 8
 
 # Always keep downloaded archives (faster re-installs)
-always_keep_download = false
+always_keep_download = true
 
 # Experimental features
-experimental = true
+experimental = false
 
 [env]
 # Global environment variables managed by mise.

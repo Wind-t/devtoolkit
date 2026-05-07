@@ -84,7 +84,7 @@ Wait a few minutes. After seeing "Bootstrap Complete":
 
 ```bash
 exec zsh
-bash ~/.local/share/devtoolkit/verify.sh   # 50+ checks, should be all green
+bash ~/.local/share/devtoolkit/verify.sh   # 60+ checks, should be all green
 ```
 
 ### Step 3 — Configure OpenCode (optional)

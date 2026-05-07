@@ -122,3 +122,13 @@ fi
 
 [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
 eval "$(atuin init bash)"
+
+# --- mise (polyglot version manager) ---
+if [ -x "$HOME/.local/bin/mise" ]; then
+    eval "$($HOME/.local/bin/mise activate bash)"
+fi
+
+# --- starship prompt ---
+if command -v starship &>/dev/null; then
+    eval "$(starship init bash)"
+fi

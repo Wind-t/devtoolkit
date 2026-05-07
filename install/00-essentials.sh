@@ -49,6 +49,7 @@ sudo apt install -y -qq \
     unar \
     jq \
     tree \
+    micro \
     ca-certificates \
     gnupg \
     lsb-release \

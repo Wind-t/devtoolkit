@@ -251,10 +251,3 @@ path=( ${path:#*/games*} )                         # remove games dirs (WSL does
 
 # --- mise internal vars cleanup (safe to unset, not needed at runtime) ------
 unset __MISE_DIFF __MISE_ORIG_PATH __MISE_SESSION 2>/dev/null
-
-# bun completions
-[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
