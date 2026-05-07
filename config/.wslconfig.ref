@@ -33,22 +33,18 @@
 # HDD: set swap=0 or very small
 swap=4GB
 
-# --- swap file path (optional) ---
-# swapFile=C:\\WSL\\swap.vhdx
-
 # --- networking ---
 # Mirrored mode (GA since WSL 2.4+) — WSL shares Windows IP, localhost just works.
-# Enabled by default on modern Windows builds.
 networkingMode=mirrored
 
-# DNS tunneling (GA) — improves VPN/firewall compatibility (default: true)
-# dnsTunneling=true
+# DNS tunneling (GA, default true) — improves VPN/firewall compatibility
+dnsTunneling=true
 
-# Hyper-V firewall (GA) — apply Windows firewall rules to WSL (default: true)
-# firewall=true
+# Hyper-V firewall (GA, default true) — apply Windows firewall rules to WSL
+firewall=true
 
 # VM idle timeout in milliseconds. Automatically release resources after idle.
-# vmIdleTimeout=60000
+vmIdleTimeout=60000
 
 # =============================================================================
 [experimental]

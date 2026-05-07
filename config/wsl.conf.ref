@@ -11,17 +11,15 @@
 systemd=true
 
 [network]
-# Use Windows hostname inside WSL
-hostname=
-
-# Generate /etc/resolv.conf from Windows networking config
+# Generate /etc/resolv.conf from Windows networking config (default: true)
 generateResolvConf=true
 
 [interop]
 # Allow Windows executables to be invoked from WSL
 enabled=true
 
-# Append Windows PATH to WSL PATH (set false for cleaner isolation)
+# Append Windows PATH to WSL PATH
+# Set false for cleaner isolation if you don't need Windows tools from WSL
 appendWindowsPath=true
 
 [automount]
@@ -29,12 +27,11 @@ appendWindowsPath=true
 enabled=true
 root=/mnt/
 
+# Process /etc/fstab on WSL start for custom mounts
+mountFsTab=true
+
 # Mount options for Windows drives
-# metadata: enable Linux permissions on Windows files
-# case=off: case-insensitive (Windows default)
-options="metadata,case=off"
-
-# Filesystem tab (auto-mount) — recommended OFF for performance
-# You can explicitly mount when needed: sudo mount -t drvfs C: /mnt/c
-
-
+# metadata:  enable Linux permissions on Windows files
+# umask=22:  octal mask for files AND dirs (equivalent to 755 dirs, 644 files)
+# fmask=11:  extra mask for files only (results in 644 permissions)
+options="metadata,umask=22,fmask=11"
