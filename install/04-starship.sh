@@ -23,6 +23,8 @@ fi
 # --- ensure config directory exists -----------------------------------------
 mkdir -p "$HOME/.config"
 
-# --- init line will be sourced in .zshrc, so no need to add here ------------
-
-success "starship installed: $(starship --version)"
+if command -v starship &>/dev/null; then
+    success "starship installed: $(starship --version)"
+else
+    warn "starship NOT installed. Run manually: curl -fsSL https://starship.rs/install.sh | sh"
+fi

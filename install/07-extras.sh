@@ -243,4 +243,13 @@ else
     fi
 fi
 
-success "Extras installed."
+# Final summary for extras
+EXTRAS_FAILED=0
+for tool in zoxide eza btop delta lazydocker dust yazi zellij fastfetch atuin; do
+    command -v "$tool" &>/dev/null || { warn "  $tool NOT installed"; EXTRAS_FAILED=$((EXTRAS_FAILED + 1)); }
+done
+if [ "$EXTRAS_FAILED" -eq 0 ]; then
+    success "Extras installed (all 10 tools)."
+else
+    warn "Extras phase complete — $EXTRAS_FAILED tool(s) may need manual install."
+fi

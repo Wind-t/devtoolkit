@@ -34,29 +34,39 @@ log "Installing zsh plugins..."
 ZSH_PLUGIN_DIR="$HOME/.zsh"
 
 # zsh-autosuggestions
+AUTOSUGGEST_OK=false
 if [ ! -d "$ZSH_PLUGIN_DIR/zsh-autosuggestions" ]; then
     if timeout 120 git clone --depth 1 https://github.com/zsh-users/zsh-autosuggestions.git \
         "$ZSH_PLUGIN_DIR/zsh-autosuggestions" 2>/dev/null; then
         success "zsh-autosuggestions installed."
+        AUTOSUGGEST_OK=true
     else
         log "zsh-autosuggestions clone failed (network issue?)."
     fi
 else
     log "zsh-autosuggestions already present, updating..."
     timeout 30 git -C "$ZSH_PLUGIN_DIR/zsh-autosuggestions" pull --ff-only 2>/dev/null || true
+    AUTOSUGGEST_OK=true
 fi
 
 # zsh-syntax-highlighting
+SYNTAX_OK=false
 if [ ! -d "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting" ]; then
     if timeout 120 git clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting.git \
         "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting" 2>/dev/null; then
         success "zsh-syntax-highlighting installed."
+        SYNTAX_OK=true
     else
         log "zsh-syntax-highlighting clone failed (network issue?)."
     fi
 else
     log "zsh-syntax-highlighting already present, updating..."
     timeout 30 git -C "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting" pull --ff-only 2>/dev/null || true
+    SYNTAX_OK=true
 fi
 
-success "zsh + plugins configured."
+if $AUTOSUGGEST_OK && $SYNTAX_OK; then
+    success "zsh + plugins configured."
+else
+    warn "Some zsh plugins may not be installed. Check network and re-run."
+fi

@@ -24,5 +24,9 @@ fi
 mkdir -p "$HOME/.config/opencode"
 export OPENCODE_CONFIG_DIR="$HOME/.config/opencode"
 
-success "OpenCode installed."
-log "Run 'opencode auth login' to configure your AI provider keys."
+if command -v opencode &>/dev/null; then
+    success "OpenCode installed."
+    log "Run 'opencode auth login' to configure your AI provider keys."
+else
+    warn "OpenCode NOT installed. Run manually: curl -fsSL https://opencode.ai/install | bash"
+fi
