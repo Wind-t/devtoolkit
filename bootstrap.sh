@@ -36,11 +36,19 @@ run_phase() {
 section "Preflight Checks"
 
 if ! grep -qi microsoft /proc/version 2>/dev/null; then
-    fail "This script must be run inside WSL."
+    if [ "${SKIP_WSL_CHECK:-0}" = "1" ]; then
+        log "SKIP_WSL_CHECK=1, bypassing WSL detection (CI/Docker mode)."
+    else
+        fail "This script must be run inside WSL."
+    fi
 fi
 
 if [ "$(whoami)" = "root" ]; then
-    fail "Do not run as root. Run as your normal user."
+    if [ "${SKIP_ROOT_CHECK:-0}" = "1" ]; then
+        log "SKIP_ROOT_CHECK=1, running as root (CI/Docker mode)."
+    else
+        fail "Do not run as root. Run as your normal user."
+    fi
 fi
 
 if ! sudo -n true 2>/dev/null; then
