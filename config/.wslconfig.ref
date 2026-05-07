@@ -1,0 +1,62 @@
+# =============================================================================
+# .wslconfig — WSL 2 global settings
+# =============================================================================
+# COPY THIS FILE TO:  %UserProfile%\.wslconfig   (Windows side!)
+#
+# After editing, apply changes:
+#   PowerShell:  wsl --shutdown
+#   Then restart your WSL terminal.
+#
+# Docs: https://learn.microsoft.com/en-us/windows/wsl/wsl-config
+# =============================================================================
+
+[wsl2]
+
+# --- memory ---
+# Rule: Leave 4-8 GB for Windows. Pick the value matching YOUR hardware:
+#   8 GB  total → memory=4GB
+#  16 GB  total → memory=8GB   (recommended for most devs)
+#  32 GB  total → memory=16GB
+#  64 GB+ total → memory=24GB
+# memory=8GB
+
+# --- processors ---
+# Rule: Leave 2-4 cores for Windows host responsiveness:
+#   8 cores  → processors=4
+#  12 cores  → processors=8
+#  16 cores  → processors=12
+#  24 cores+ → processors=16
+# processors=8
+
+# --- swap ---
+# SSD: keep moderate swap (2-8 GB)
+# HDD: set swap=0 or very small
+swap=4GB
+
+# --- swap file path (optional) ---
+# swapFile=C:\\WSL\\swap.vhdx
+
+# --- networking ---
+# Mirrored mode (GA since WSL 2.4+) — WSL shares Windows IP, localhost just works.
+# Enabled by default on modern Windows builds.
+networkingMode=mirrored
+
+# DNS tunneling (GA) — improves VPN/firewall compatibility (default: true)
+# dnsTunneling=true
+
+# Hyper-V firewall (GA) — apply Windows firewall rules to WSL (default: true)
+# firewall=true
+
+# VM idle timeout in milliseconds. Automatically release resources after idle.
+# vmIdleTimeout=60000
+
+# =============================================================================
+[experimental]
+# These features are opt-in previews. May become default in future releases.
+# =============================================================================
+
+# Auto-reclaim freed memory back to Windows (recommended: gradual)
+autoMemoryReclaim=gradual
+
+# Auto-shrink virtual disk — prevents VHD from growing unbounded (recommended)
+sparseVhd=true

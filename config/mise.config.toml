@@ -1,0 +1,32 @@
+# =============================================================================
+# mise.config.toml — mise global configuration
+# =============================================================================
+# Docs: https://mise.jdx.dev/configuration/
+# =============================================================================
+
+[tools]
+node = "22"
+
+[settings]
+# Activate mise automatically in shells (handled by .zshrc eval line)
+activate_aggressive = false
+
+# Trust all config files (convenience, adjust for stricter security)
+trusted_config_paths = ["~/.config/mise"]
+
+# Parallel downloads
+jobs = 8
+
+# Always keep downloaded archives (faster re-installs)
+always_keep_download = false
+
+# Experimental features
+experimental = true
+
+[env]
+# Global environment variables managed by mise.
+# NOTE: mise's global [env] only supports tool-specific vars (e.g. MISE_NODE_VERSION).
+# For arbitrary secrets (API keys, tokens), use ~/.env_secrets instead.
+# This file is sourced by .zshrc (see L214) and is gitignored + chmod 600.
+# To add per-project secrets, use mise.toml's env._.file in the project directory.
+# MISE_NODE_VERSION = "22"

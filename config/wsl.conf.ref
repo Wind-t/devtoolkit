@@ -1,0 +1,40 @@
+# =============================================================================
+# wsl.conf — per-distro WSL settings
+# =============================================================================
+# COPY THIS FILE TO:  /etc/wsl.conf   (inside WSL, requires sudo)
+#
+# Docs: https://learn.microsoft.com/en-us/windows/wsl/wsl-config
+# =============================================================================
+
+[boot]
+# systemd support (Ubuntu 24.04+ has systemd enabled by default)
+systemd=true
+
+[network]
+# Use Windows hostname inside WSL
+hostname=
+
+# Generate /etc/resolv.conf from Windows networking config
+generateResolvConf=true
+
+[interop]
+# Allow Windows executables to be invoked from WSL
+enabled=true
+
+# Append Windows PATH to WSL PATH (set false for cleaner isolation)
+appendWindowsPath=true
+
+[automount]
+# Mount Windows drives under /mnt/ (e.g. /mnt/c)
+enabled=true
+root=/mnt/
+
+# Mount options for Windows drives
+# metadata: enable Linux permissions on Windows files
+# case=off: case-insensitive (Windows default)
+options="metadata,case=off"
+
+# Filesystem tab (auto-mount) — recommended OFF for performance
+# You can explicitly mount when needed: sudo mount -t drvfs C: /mnt/c
+
+

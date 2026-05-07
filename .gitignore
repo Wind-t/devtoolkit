@@ -1,0 +1,14 @@
+# Backup files from bootstrap.sh shell linking
+*.bak.*
+
+# Secrets and environment files (never commit)
+.env*
+*.env
+config.local.toml
+
+# Local development artifacts
+.sisyphus/
+.opencode/
+
+# Internal AI prompts (not needed for end users)
+audit-prompt.md
