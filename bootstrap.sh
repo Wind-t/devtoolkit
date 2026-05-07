@@ -116,6 +116,12 @@ log "Home: $HOME"
 # --- run install scripts ----------------------------------------------------
 run_phase "Phase 1 — Base System"                         "$INSTALL_DIR/00-essentials.sh"
 run_phase "Phase 2 — Shell & CLI"                         "$INSTALL_DIR/01-zsh.sh"
+
+# Link mise config BEFORE Phase 3 — mise install writes to this file,
+# so we must set it up first to avoid overwriting mise's own config
+mkdir -p "$HOME/.config/mise"
+link_file "$CONFIG_DIR/mise.config.toml" "$HOME/.config/mise/config.toml"
+
 run_phase "Phase 3 — Polyglot Version Manager (mise)"     "$INSTALL_DIR/02-mise.sh"
 run_phase "Phase 4 — Python Toolchain (uv + Ruff)"        "$INSTALL_DIR/03-uv.sh"
 run_phase "Phase 5 — Starship Prompt"                     "$INSTALL_DIR/04-starship.sh"
@@ -151,7 +157,6 @@ link_file "$CONFIG_DIR/.zshenv"       "$HOME/.zshenv"
 link_file "$CONFIG_DIR/.profile"      "$HOME/.profile"
 link_file "$CONFIG_DIR/.gitconfig"    "$HOME/.gitconfig"
 link_file "$CONFIG_DIR/starship.toml" "$HOME/.config/starship.toml"
-link_file "$CONFIG_DIR/mise.config.toml" "$HOME/.config/mise/config.toml"
 link_file "$CONFIG_DIR/.gitignore_global" "$HOME/.gitignore_global"
 
 # --- final ------------------------------------------------------------------
