@@ -37,6 +37,12 @@ if ! command -v fd &>/dev/null && command -v fdfind &>/dev/null; then
     ln -sf "$(command -v fdfind)" "$HOME/.local/bin/fd"
 fi
 
+# Create `bat` alias (Ubuntu packages it as `batcat`)
+if ! command -v bat &>/dev/null && command -v batcat &>/dev/null; then
+    mkdir -p "$HOME/.local/bin"
+    ln -sf "$(command -v batcat)" "$HOME/.local/bin/bat"
+fi
+
 # --- lazygit ----------------------------------------------------------------
 if command -v lazygit &>/dev/null; then
     log "lazygit already installed: $(lazygit --version | head -1)"
