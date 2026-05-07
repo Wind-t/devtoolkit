@@ -12,7 +12,7 @@ node = "22"
 activate_aggressive = false
 
 # Trust all config files (convenience, adjust for stricter security)
-trusted_config_paths = ["~/.config/mise"]
+trusted_config_paths = ["~/.config/mise", "~/projects"]
 
 # Parallel downloads
 jobs = 8

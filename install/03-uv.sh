@@ -18,7 +18,9 @@ if command -v uv &>/dev/null; then
     log "uv already installed: $(uv --version 2>/dev/null)"
 else
     log "Installing uv via official standalone installer..."
-    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 60 -LsSf https://astral.sh/uv/install.sh | sh
+    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 5 -LsSf https://astral.sh/uv/install.sh | sh || {
+        log "uv install failed (network issue?). Install manually: https://docs.astral.sh/uv/"
+    }
     export PATH="$HOME/.local/bin:$PATH"
 fi
 

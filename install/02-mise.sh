@@ -15,7 +15,9 @@ if command -v mise &>/dev/null; then
     log "mise already installed: $(mise --version)"
 else
     log "Installing mise via official script..."
-    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 60 -fsSL https://mise.run | sh
+    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 5 -fsSL https://mise.run | sh || {
+        log "mise install script failed (network issue?). Install manually: https://mise.jdx.dev"
+    }
 
     # Ensure mise binary is available immediately
     export PATH="$HOME/.local/bin:$PATH"

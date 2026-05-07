@@ -99,6 +99,7 @@ check_opt "delta"            "delta --version"
 check_opt "difftastic"       "difft --version"
 check_opt "tealdeer"         "tldr --version"
 check_opt "gh"               "gh --version"
+check_opt "micro"             "micro --version"
 
 # --- Extras -----------------------------------------------------------------
 printf '\n\033[1;36m[ Extras ]\033[0m\n'

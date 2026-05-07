@@ -14,7 +14,9 @@ if command -v opencode &>/dev/null; then
     log "OpenCode already installed: $(opencode --version 2>/dev/null || echo 'ok')"
 else
     log "Installing OpenCode via official script..."
-    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 60 -fsSL https://opencode.ai/install | bash
+    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 5 -fsSL https://opencode.ai/install | bash || {
+        log "OpenCode install failed (network issue?). Install manually: https://opencode.ai"
+    }
     export PATH="$HOME/.local/bin:$PATH"
 fi
 

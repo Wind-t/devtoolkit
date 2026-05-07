@@ -28,7 +28,7 @@
 
 | 分类 | 工具 | 干什么的 |
 |------|------|---------|
-| Shell | zsh + starship | 带主题色彩（Gruvbox Dark）的提示符 |
+| Shell | zsh + starship | 带自定义暗色主题的提示符 |
 | 插件 | zsh-autosuggestions | 鱼壳风格自动补全 |
 | | zsh-syntax-highlighting | 实时命令语法高亮 |
 | 版本管理 | mise | Node、Go、Rust、Java 等 50+ 语言 |

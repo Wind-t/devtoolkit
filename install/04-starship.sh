@@ -14,7 +14,9 @@ if command -v starship &>/dev/null; then
     log "starship already installed: $(starship --version)"
 else
     log "Installing starship via official script..."
-    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 60 -fsSL https://starship.rs/install.sh | sh -s -- -y
+    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 5 -fsSL https://starship.rs/install.sh | sh -s -- -y || {
+        log "starship install failed (network issue?). Install manually: https://starship.rs"
+    }
     export PATH="$HOME/.local/bin:$PATH"
 fi
 

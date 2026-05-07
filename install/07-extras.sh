@@ -260,7 +260,9 @@ if command -v atuin &>/dev/null; then
     log "atuin already installed: $(atuin --version 2>/dev/null || echo 'ok')"
 else
     log "Installing atuin..."
-    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 60 -fsSL https://setup.atuin.sh | bash
+    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 5 -fsSL https://setup.atuin.sh | bash || {
+        log "atuin install failed (network issue?). Install manually: https://atuin.sh"
+    }
     export PATH="$HOME/.local/bin:$PATH"
     # atuin installer may put binary in ~/.atuin/bin, symlink to standard path
     if [ -f "$HOME/.atuin/bin/atuin" ] && [ ! -f "$HOME/.local/bin/atuin" ]; then

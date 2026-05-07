@@ -28,7 +28,7 @@ An idempotent WSL Ubuntu development environment bootstrap script. 8 phases, run
 
 | Category | Tools | Purpose |
 |----------|-------|---------|
-| Shell | zsh + starship | Prompt with Gruvbox Dark theme |
+| Shell | zsh + starship | Prompt with custom dark theme |
 | Plugins | zsh-autosuggestions | Fish-style auto-completion |
 | | zsh-syntax-highlighting | Real-time command highlighting |
 | Version Mgmt | mise | 50+ languages (Node, Go, Rust, Java, …) |
