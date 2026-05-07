@@ -35,9 +35,11 @@ fi
 log "Installing common runtimes via mise..."
 
 for tool in node@lts go@latest; do
-    # Extract bare tool name (strip @version alias for mise current check)
+    # Extract bare tool name (strip @version alias)
     tool_name="${tool%%@*}"
-    if mise current "$tool_name" &>/dev/null; then
+    # mise current returns 0 even when tool is not installed (WARN + exit 0),
+    # so we check mise ls output instead
+    if mise ls "$tool_name" 2>/dev/null | grep -q .; then
         log "  $tool already installed."
     else
         log "  Installing $tool..."
