@@ -76,7 +76,7 @@ wsl --install -d Ubuntu-24.04
 ### 第二步 — 一键部署
 
 ```bash
-git clone https://github.com/你的用户名/devtoolkit.git ~/.local/share/devtoolkit
+git clone https://github.com/Wind-t/devtoolkit.git ~/.local/share/devtoolkit
 bash ~/.local/share/devtoolkit/bootstrap.sh
 ```
 

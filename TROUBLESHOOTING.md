@@ -35,14 +35,14 @@ curl -fsSL https://opencode.ai/install.sh | bash
 **Solution**:
 ```bash
 # Fix ownership first
-sudo chown -R $USER:$USER ~/projects/devtoolkit
+sudo chown -R $USER:$USER ~/.local/share/devtoolkit
 
 # Manually create links
-CONFIG_DIR="$HOME/dev/devtoolkit/config"
+CONFIG_DIR="$HOME/.local/share/devtoolkit/config"
 ln -sf "$CONFIG_DIR/.zshrc" "$HOME/.zshrc"
 ln -sf "$CONFIG_DIR/.zshenv" "$HOME/.zshenv"
 ln -sf "$CONFIG_DIR/.gitconfig" "$HOME/.gitconfig"
-ln -sf "$CONFIG_DIR/starship.toml" "$HOME/.config/starship/starship.toml"
+ln -sf "$CONFIG_DIR/starship.toml" "$HOME/.config/starship.toml"
 ln -sf "$CONFIG_DIR/mise.config.toml" "$HOME/.config/mise/config.toml"
 ln -sf "$CONFIG_DIR/.gitignore_global" "$HOME/.gitignore_global"
 ```
