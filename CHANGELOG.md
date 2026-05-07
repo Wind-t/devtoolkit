@@ -5,7 +5,7 @@
 ### Added
 - Initial public release
 - 8-phase idempotent WSL Ubuntu dev environment bootstrap
-- 26 tools: zsh, starship, mise, uv, ruff, lazygit, delta, difftastic, ripgrep, fd, fzf, bat, tealdeer, gh, micro, zoxide, eza, btop, lazydocker, dust, yazi, zellij, fastfetch, atuin, OpenCode
+- 27 tools: zsh, starship, zsh-autosuggestions, zsh-syntax-highlighting, mise, uv, ruff, lazygit, delta, difftastic, ripgrep, fd, fzf, bat, tealdeer, gh, micro, zoxide, eza, btop, lazydocker, dust, yazi, zellij, fastfetch, atuin, OpenCode
 - Shell functions: `pyinit`, `mkcd`, `extract`
 - 60+ item verification suite (`verify.sh`)
 - Bilingual README (中文 + English) with language switcher

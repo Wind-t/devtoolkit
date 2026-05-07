@@ -35,6 +35,7 @@ An idempotent WSL Ubuntu development environment bootstrap script. 8 phases, run
 | Python | uv | Package manager + Python installer (replaces pip/pyenv/poetry) |
 | | Ruff | 10-100x faster linter + formatter |
 | Git | lazygit + delta + difftastic | TUI client + syntax-highlighted diff + structural diff |
+| | gh | GitHub CLI (issue/PR/release management) |
 | Navigation | zoxide | Smarter cd (learns your habits) |
 | Listing | eza | Modern ls with icons and git status |
 | Search | ripgrep + fd + fzf | Fast file/content search |

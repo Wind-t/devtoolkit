@@ -35,6 +35,7 @@
 | Python | uv | 包管理器 + Python 安装器（替代 pip/pyenv/poetry） |
 | | Ruff | 10-100x 快的 linter + formatter |
 | Git | lazygit + delta + difftastic | TUI 客户端 + 语法高亮 diff + 结构化对比 |
+| | gh | GitHub CLI（issue/PR/release 管理） |
 | 导航 | zoxide | 智能 cd（越用越懂你） |
 | 列表 | eza | 现代 ls，带图标和 git 状态 |
 | 搜索 | ripgrep + fd + fzf | 快速文件/内容搜索 |
