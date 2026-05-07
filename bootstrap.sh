@@ -51,7 +51,9 @@ if [ "$(whoami)" = "root" ]; then
     fi
 fi
 
-if ! sudo -n true 2>/dev/null; then
+if [ "${SKIP_SUDO_CHECK:-0}" = "1" ]; then
+    log "SKIP_SUDO_CHECK=1, bypassing sudo check (CI/DRY_RUN mode)."
+elif ! sudo -n true 2>/dev/null; then
     if ! tty -s 2>/dev/null; then
         fail "Running in non-interactive mode and no valid sudo ticket.
   Workarounds:
@@ -62,8 +64,8 @@ if ! sudo -n true 2>/dev/null; then
     fi
     log "sudo access required. You may be prompted for your password."
     sudo -v || fail "sudo authentication failed."
+    log "sudo access confirmed."
 fi
-log "sudo access confirmed."
 
 # Pre-flight dependency check — verify required binaries exist before any phase
 section "Preflight — Dependency Check"
