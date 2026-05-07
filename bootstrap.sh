@@ -15,11 +15,8 @@ INSTALL_DIR="$DOTFILES_DIR/install"
 CONFIG_DIR="$DOTFILES_DIR/config"
 TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 
-# --- helpers ----------------------------------------------------------------
-log()      { printf '\033[1;34m[INFO]\033[0m  "%s"\n' "$*"; }
-success()  { printf '\033[1;32m[OK]\033[0m    "%s"\n' "$*"; }
-warn()     { printf '\033[1;33m[WARN]\033[0m  "%s"\n' "$*"; }
-fail()     { printf '\033[1;31m[FAIL]\033[0m  "%s"\n' "$*"; exit 1; }
+# --- shared helpers ---------------------------------------------------------
+source "$DOTFILES_DIR/lib/common.sh"
 
 run_phase() {
     local name="$1" script="$2"
@@ -34,10 +31,6 @@ run_phase() {
         bash "$script" || log "Warning: Phase '$name' failed (script: $script), continuing..."
     fi
 }
-
-section()  { printf '\n\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m\n';
-             printf '\033[1;36m  %s\033[0m\n' "$*";
-             printf '\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m\n'; }
 
 # --- preflight --------------------------------------------------------------
 section "Preflight Checks"
@@ -63,6 +56,29 @@ if ! sudo -n true 2>/dev/null; then
     sudo -v || fail "sudo authentication failed."
 fi
 log "sudo access confirmed."
+
+# Pre-flight dependency check — verify required binaries exist before any phase
+section "Preflight — Dependency Check"
+declare -A REQUIRED_BINS=(
+    [curl]="sudo apt install -y curl"
+    [git]="sudo apt install -y git"
+    [jq]="sudo apt install -y jq"
+    [tar]="sudo apt install -y tar"
+    [unzip]="sudo apt install -y unzip"
+)
+DEPS_FAILED=0
+for bin in "${!REQUIRED_BINS[@]}"; do
+    if command -v "$bin" &>/dev/null; then
+        log "  ✓ $bin"
+    else
+        warn "  ✗ $bin — install with: ${REQUIRED_BINS[$bin]}"
+        DEPS_FAILED=$((DEPS_FAILED + 1))
+    fi
+done
+if [ "$DEPS_FAILED" -gt 0 ]; then
+    fail "$DEPS_FAILED required tool(s) missing. Install them and re-run."
+fi
+success "All required tools available."
 
 # Check disk space (warn if < 2GB available in $HOME)
 AVAIL_KB=$(df -k --output=avail "$HOME" 2>/dev/null | tail -1)

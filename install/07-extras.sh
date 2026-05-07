@@ -12,14 +12,11 @@
 # =============================================================================
 set -euo pipefail
 
-log()   { printf '\033[1;34m[INFO]\033[0m  "%s"\n' "$*"; }
-success(){ printf '\033[1;32m[OK]\033[0m    "%s"\n' "$*"; }
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/../lib/common.sh"
 
 # --- dependency guard --------------------------------------------------------
-if ! command -v jq &>/dev/null; then
-    echo "[ERROR] jq is required but not installed. Run 00-essentials.sh first." >&2
-    exit 1
-fi
+require_jq
 
 # --- zoxide -----------------------------------------------------------------
 if command -v zoxide &>/dev/null; then
@@ -34,7 +31,7 @@ else
         cargo install zoxide 2>/dev/null && log "  zoxide installed via cargo." || log "  zoxide cargo install failed."
     else
         # Fallback to official script (may hit rate limit)
-        curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 60 -fsSL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash || log "  zoxide install failed. Install manually: https://github.com/ajeetdsouza/zoxide"
+        safe_curl https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash || log "  zoxide install failed. Install manually: https://github.com/ajeetdsouza/zoxide"
     fi
     export PATH="$HOME/.local/bin:$PATH"
 fi
@@ -61,13 +58,7 @@ if command -v btop &>/dev/null; then
     log "btop already installed: $(btop --version 2>/dev/null || echo 'ok')"
 else
     log "Installing btop..."
-    BTOP_VERSION=$(curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 30 -fsSL \
-        https://api.github.com/repos/aristocratos/btop/releases/latest \
-        | jq -r '.tag_name // empty' | sed 's/^v//') || BTOP_VERSION=""
-    if [ -z "$BTOP_VERSION" ]; then
-        log "  GitHub API unreachable, using fallback version for btop."
-        BTOP_VERSION="1.4.7"
-    fi
+    BTOP_VERSION=$(github_latest_tag "aristocratos/btop" "v1.4.7" | sed 's/^v//')
     case "$(uname -m)" in
         x86_64)  BTOP_ARCH="x86_64-unknown-linux-musl" ;;
         aarch64) BTOP_ARCH="aarch64-unknown-linux-musl" ;;
@@ -75,7 +66,7 @@ else
     esac
     TMPDIR=$(mktemp -d -t btop-XXXX)
     trap 'rm -rf "${TMPDIR:-}" 2>/dev/null' EXIT INT TERM
-    if curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 120 -fsSLo "$TMPDIR/btop.tar.gz" \
+    if safe_curl --max-time 120 -o "$TMPDIR/btop.tar.gz" \
         "https://github.com/aristocratos/btop/releases/download/v${BTOP_VERSION}/btop-${BTOP_ARCH}.tar.gz" && \
         tar xzf "$TMPDIR/btop.tar.gz" -C "$TMPDIR"; then
         mkdir -p "$HOME/.local/bin" "$HOME/.config/btop/themes"
@@ -95,13 +86,7 @@ if command -v delta &>/dev/null; then
     log "delta already installed: $(delta --version | head -1)"
 else
     log "Installing git-delta..."
-    DELTA_TAG=$(curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 30 -fsSL \
-        https://api.github.com/repos/dandavison/delta/releases/latest \
-        | jq -r '.tag_name // empty') || DELTA_TAG=""
-    if [ -z "$DELTA_TAG" ]; then
-        log "  GitHub API unreachable, using fallback version for delta."
-        DELTA_TAG="0.19.2"
-    fi
+    DELTA_TAG=$(github_latest_tag "dandavison/delta" "0.19.2")
     DELTA_VERSION="${DELTA_TAG#v}"
     case "$(uname -m)" in
         x86_64)  DELTA_ARCH="amd64" ;;
@@ -109,7 +94,7 @@ else
         *)       DELTA_ARCH="amd64" ;;
     esac
     TMPDEB=$(mktemp -t delta-XXXX.deb)
-    if curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 120 -fsSLo "$TMPDEB" \
+    if safe_curl --max-time 120 -o "$TMPDEB" \
         "https://github.com/dandavison/delta/releases/download/${DELTA_TAG}/git-delta_${DELTA_VERSION}_${DELTA_ARCH}.deb" \
         && sudo dpkg -i "$TMPDEB" 2>/dev/null \
         && sudo apt-get install -f -y -qq 2>/dev/null; then
@@ -126,13 +111,7 @@ if command -v lazydocker &>/dev/null; then
     log "lazydocker already installed: $(lazydocker --version | head -1)"
 else
     log "Installing lazydocker..."
-    LAZYDOCKER_VERSION=$(curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 30 -fsSL \
-        https://api.github.com/repos/jesseduffield/lazydocker/releases/latest \
-        | jq -r '.tag_name // empty' | sed 's/^v//') || LAZYDOCKER_VERSION=""
-    if [ -z "$LAZYDOCKER_VERSION" ]; then
-        log "GitHub API unreachable, using fallback version for lazydocker."
-        LAZYDOCKER_VERSION="0.25.2"
-    fi
+    LAZYDOCKER_VERSION=$(github_latest_tag "jesseduffield/lazydocker" "v0.25.2" | sed 's/^v//')
     case "$(uname -m)" in
         x86_64)  LD_ARCH="x86_64" ;;
         aarch64) LD_ARCH="arm64" ;;
@@ -140,7 +119,7 @@ else
     esac
     TMPDIR=$(mktemp -d -t lazydocker-XXXX)
     trap 'rm -rf "${TMPDIR:-}" 2>/dev/null' EXIT INT TERM
-    if curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 120 -fsSLo "$TMPDIR/lazydocker.tar.gz" \
+    if safe_curl --max-time 120 -o "$TMPDIR/lazydocker.tar.gz" \
         "https://github.com/jesseduffield/lazydocker/releases/download/v${LAZYDOCKER_VERSION}/lazydocker_${LAZYDOCKER_VERSION}_Linux_${LD_ARCH}.tar.gz" && \
         tar xf "$TMPDIR/lazydocker.tar.gz" -C "$TMPDIR" lazydocker; then
         mkdir -p "$HOME/.local/bin"
@@ -159,20 +138,14 @@ if command -v dust &>/dev/null; then
     log "dust already installed: $(dust --version 2>/dev/null || echo 'ok')"
 else
     log "Installing dust..."
-    DUST_VERSION=$(curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 30 -fsSL \
-        https://api.github.com/repos/bootandy/dust/releases/latest \
-        | jq -r '.tag_name // empty' | sed 's/^v//') || DUST_VERSION=""
-    if [ -z "$DUST_VERSION" ]; then
-        log "GitHub API unreachable, using fallback version for dust."
-        DUST_VERSION="1.2.4"
-    fi
+    DUST_VERSION=$(github_latest_tag "bootandy/dust" "v1.2.4" | sed 's/^v//')
     case "$(uname -m)" in
         x86_64)  DUST_ARCH="x86_64-unknown-linux-musl" ;;
         aarch64) DUST_ARCH="aarch64-unknown-linux-musl" ;;
         *)       log "Unsupported arch for dust, falling back to x86_64"; DUST_ARCH="x86_64-unknown-linux-musl" ;;
     esac
     TMPDIR=$(mktemp -d -t dust-XXXX)
-    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 120 -fsSLo "$TMPDIR/dust.tar.gz" \
+    safe_curl --max-time 120 -o "$TMPDIR/dust.tar.gz" \
         "https://github.com/bootandy/dust/releases/download/v${DUST_VERSION}/dust-v${DUST_VERSION}-${DUST_ARCH}.tar.gz" \
         && {
             tar xzf "$TMPDIR/dust.tar.gz" -C "$TMPDIR"
@@ -198,7 +171,7 @@ else
     esac
     TMPDIR=$(mktemp -d -t yazi-XXXX)
     trap 'rm -rf "${TMPDIR:-}" 2>/dev/null' EXIT INT TERM
-    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 120 -fsSLo "$TMPDIR/yazi.zip" \
+    safe_curl --max-time 120 -o "$TMPDIR/yazi.zip" \
         "https://github.com/sxyazi/yazi/releases/latest/download/yazi-${YAZI_ARCH}.zip"
     if unzip -qo "$TMPDIR/yazi.zip" -d "$TMPDIR" 2>/dev/null; then
         mkdir -p "$HOME/.local/bin"
@@ -225,7 +198,7 @@ else
     esac
     TMPDIR=$(mktemp -d -t fastfetch-XXXX)
     trap 'rm -rf "${TMPDIR:-}" 2>/dev/null' EXIT INT TERM
-    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 120 -fsSLo "$TMPDIR/fastfetch.tar.gz" \
+    safe_curl --max-time 120 -o "$TMPDIR/fastfetch.tar.gz" \
         "https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-${FF_ARCH}.tar.gz"
     tar xzf "$TMPDIR/fastfetch.tar.gz" -C "$TMPDIR"
     mkdir -p "$HOME/.local/bin"
@@ -246,7 +219,7 @@ else
     esac
     TMPDIR=$(mktemp -d -t zellij-XXXX)
     trap 'rm -rf "${TMPDIR:-}" 2>/dev/null' EXIT INT TERM
-    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 120 -fsSLo "$TMPDIR/zellij.tar.gz" \
+    safe_curl --max-time 120 -o "$TMPDIR/zellij.tar.gz" \
         "https://github.com/zellij-org/zellij/releases/latest/download/zellij-${ZELLIJ_ARCH}.tar.gz"
     tar xzf "$TMPDIR/zellij.tar.gz" -C "$TMPDIR"
     mkdir -p "$HOME/.local/bin"
@@ -260,7 +233,7 @@ if command -v atuin &>/dev/null; then
     log "atuin already installed: $(atuin --version 2>/dev/null || echo 'ok')"
 else
     log "Installing atuin..."
-    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 5 -fsSL https://setup.atuin.sh | bash || {
+    safe_curl https://setup.atuin.sh | bash || {
         log "atuin install failed (network issue?). Install manually: https://atuin.sh"
     }
     export PATH="$HOME/.local/bin:$PATH"

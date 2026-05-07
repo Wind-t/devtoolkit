@@ -8,11 +8,12 @@ A bootstrap script for setting up a complete WSL Ubuntu development environment.
 - Uninstall: `bash uninstall.sh`
 
 ## Project Structure
-- `bootstrap.sh` — main install script (idempotent)
-- `verify.sh` — post-install verification (50+ checks)
+- `bootstrap.sh` — main install script (idempotent, with pre-flight dep checks)
+- `verify.sh` — post-install verification (65+ checks)
 - `uninstall.sh` — cleanup script
+- `lib/common.sh` — shared helpers (log, safe_curl, get_arch, github_latest_tag, require_jq)
 - `config/` — configuration templates (shell, git, starship, mise, WSL)
-- `install/` — per-tool install modules (8 phases)
+- `install/` — per-tool install modules (8 phases, all source lib/common.sh)
 - `docs/` — architecture docs (EN + ZH) and productivity guide (ZH)
 - `README.md` — primary documentation (Chinese)
 - `README.en.md` — English documentation

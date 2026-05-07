@@ -11,26 +11,21 @@
 # =============================================================================
 set -euo pipefail
 
-log()   { printf '\033[1;34m[INFO]\033[0m  %s\n' "$*"; }
-success(){ printf '\033[1;32m[OK]\033[0m    %s\n' "$*"; }
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/../lib/common.sh"
 
 # --- dependency guard --------------------------------------------------------
-if ! command -v jq &>/dev/null; then
-    echo "[ERROR] jq is required but not installed. Run 00-essentials.sh first." >&2
-    exit 1
-fi
+require_jq
 
-ARCH=$(uname -m)
+ARCH=$(get_arch)
 case "$ARCH" in
     x86_64)  LAZYGIT_ARCH="x86_64" ;;
-    aarch64) LAZYGIT_ARCH="arm64" ;;
+    arm64)   LAZYGIT_ARCH="arm64" ;;
     *)       echo "Unsupported architecture: $ARCH"; exit 1 ;;
 esac
 
 # Fetch version for logging (URL uses /latest/download/ so version is non-critical)
-LAZYGIT_VERSION=$(curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 30 -fsSL \
-    "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" \
-    | jq -r '.tag_name // empty' | sed 's/^v//') || LAZYGIT_VERSION="0.61.1"
+LAZYGIT_VERSION=$(github_latest_tag "jesseduffield/lazygit" "v0.61.1" | sed 's/^v//')
 
 # --- ripgrep, fd, bat -------------------------------------------------------
 log "Installing ripgrep, fd, bat, fzf..."
@@ -49,7 +44,7 @@ else
     log "Installing lazygit v${LAZYGIT_VERSION} (${LAZYGIT_ARCH})..."
     TMPDIR=$(mktemp -d -t lazygit-XXXX)
     trap 'rm -rf "${TMPDIR:-}" 2>/dev/null' EXIT INT TERM
-    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 120 -fsSLo "$TMPDIR/lazygit.tar.gz" \
+    safe_curl --max-time 120 -o "$TMPDIR/lazygit.tar.gz" \
         "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_${LAZYGIT_ARCH}.tar.gz"
     tar xf "$TMPDIR/lazygit.tar.gz" -C "$TMPDIR" lazygit
     mkdir -p "$HOME/.local/bin"
@@ -65,9 +60,7 @@ success "Dev tools installed."
 if command -v difft &>/dev/null; then
     log "difftastic already installed: $(difft --version | head -1)"
 else
-    DIFFT_VERSION=$(curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 30 -fsSL \
-        https://api.github.com/repos/Wilfred/difftastic/releases/latest \
-        | jq -r '.tag_name // empty' | sed 's/^v//') || DIFFT_VERSION="0.69.0"
+    DIFFT_VERSION=$(github_latest_tag "Wilfred/difftastic" "v0.69.0" | sed 's/^v//')
     log "Installing difftastic v${DIFFT_VERSION}..."
     case "$(uname -m)" in
         x86_64)  DIFF_ARCH="x86_64-unknown-linux-gnu" ;;
@@ -76,7 +69,7 @@ else
     esac
     TMPDIR=$(mktemp -d -t difft-XXXX)
     trap 'rm -rf "${TMPDIR:-}" 2>/dev/null' EXIT INT TERM
-    if curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 120 -fsSLo "$TMPDIR/difft.tar.gz" \
+    if safe_curl --max-time 120 -o "$TMPDIR/difft.tar.gz" \
         "https://github.com/Wilfred/difftastic/releases/latest/download/difft-${DIFF_ARCH}.tar.gz"; then
         tar xf "$TMPDIR/difft.tar.gz" -C "$TMPDIR"
         mkdir -p "$HOME/.local/bin"
@@ -100,7 +93,7 @@ else
         aarch64) TLDR_ARCH="aarch64" ;;
         *)       log "Unsupported arch for tealdeer, falling back to x86_64"; TLDR_ARCH="x86_64" ;;
     esac
-    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 120 -fsSLo "$HOME/.local/bin/tldr" \
+    safe_curl --max-time 120 -o "$HOME/.local/bin/tldr" \
         "https://github.com/tealdeer-rs/tealdeer/releases/latest/download/tealdeer-linux-${TLDR_ARCH}-musl" \
         && chmod +x "$HOME/.local/bin/tldr" \
         || log "tealdeer install failed; install manually: https://github.com/tealdeer-rs/tealdeer"

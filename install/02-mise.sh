@@ -7,15 +7,15 @@
 # =============================================================================
 set -euo pipefail
 
-log()   { printf '\033[1;34m[INFO]\033[0m  "%s"\n' "$*"; }
-success(){ printf '\033[1;32m[OK]\033[0m    "%s"\n' "$*"; }
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/../lib/common.sh"
 
 # --- install mise -----------------------------------------------------------
 if command -v mise &>/dev/null; then
     log "mise already installed: $(mise --version)"
 else
     log "Installing mise via official script..."
-    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 5 -fsSL https://mise.run | sh || {
+    safe_curl https://mise.run | sh || {
         log "mise install script failed (network issue?). Install manually: https://mise.jdx.dev"
     }
 

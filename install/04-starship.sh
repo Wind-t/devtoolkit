@@ -6,15 +6,15 @@
 # =============================================================================
 set -euo pipefail
 
-log()   { printf '\033[1;34m[INFO]\033[0m  "%s"\n' "$*"; }
-success(){ printf '\033[1;32m[OK]\033[0m    "%s"\n' "$*"; }
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/../lib/common.sh"
 
 # --- install starship -------------------------------------------------------
 if command -v starship &>/dev/null; then
     log "starship already installed: $(starship --version)"
 else
     log "Installing starship via official script..."
-    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 5 -fsSL https://starship.rs/install.sh | sh -s -- -y || {
+    safe_curl https://starship.rs/install.sh | sh -s -- -y || {
         log "starship install failed (network issue?). Install manually: https://starship.rs"
     }
     export PATH="$HOME/.local/bin:$PATH"

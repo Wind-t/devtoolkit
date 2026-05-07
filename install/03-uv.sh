@@ -10,15 +10,15 @@
 # =============================================================================
 set -euo pipefail
 
-log()   { printf '\033[1;34m[INFO]\033[0m  "%s"\n' "$*"; }
-success(){ printf '\033[1;32m[OK]\033[0m    "%s"\n' "$*"; }
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "$SCRIPT_DIR/../lib/common.sh"
 
 # --- install uv -------------------------------------------------------------
 if command -v uv &>/dev/null; then
     log "uv already installed: $(uv --version 2>/dev/null)"
 else
     log "Installing uv via official standalone installer..."
-    curl --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 5 -LsSf https://astral.sh/uv/install.sh | sh || {
+    safe_curl https://astral.sh/uv/install.sh | sh || {
         log "uv install failed (network issue?). Install manually: https://docs.astral.sh/uv/"
     }
     export PATH="$HOME/.local/bin:$PATH"

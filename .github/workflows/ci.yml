@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, v2]
   pull_request:
-    branches: [main]
+    branches: [main, v2]
 
 jobs:
   lint:
@@ -25,3 +25,15 @@ jobs:
       - uses: actions/checkout@v4
       - name: syntax check verify.sh
         run: bash -n verify.sh
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run bootstrap dry-run in Docker
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/toolkit ubuntu:24.04 bash -c '
+            apt-get update -qq && apt-get install -y -qq sudo curl git jq unzip > /dev/null 2>&1
+            useradd -m testuser
+            echo "microsoft" > /proc/version
+            su - testuser -c "cd /toolkit && DRY_RUN=1 bash bootstrap.sh"
+          '
