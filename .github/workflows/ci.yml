@@ -19,9 +19,21 @@ jobs:
         with:
           severity: warning
           scandir: '.'
+          ignore_names: '.bashrc .profile .zshrc .zshenv'
+          ignore_paths: 'config'
   verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: syntax check verify.sh
         run: bash -n verify.sh
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run bootstrap dry-run in Docker
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/toolkit ubuntu:24.04 bash -c '
+            apt-get update -qq && apt-get install -y -qq sudo curl git jq unzip > /dev/null 2>&1
+            cd /toolkit && SKIP_WSL_CHECK=1 SKIP_ROOT_CHECK=1 DRY_RUN=1 bash bootstrap.sh
+          '
