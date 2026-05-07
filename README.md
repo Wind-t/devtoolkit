@@ -9,24 +9,7 @@
 [![Version](https://img.shields.io/badge/multi--lang-mise-orange)](https://mise.jdx.dev)
 [![AI](https://img.shields.io/badge/AI-OpenCode-green)](https://opencode.ai)
 
----
-
-## What's This? (English)
-
-A single-command, idempotent WSL Ubuntu dev environment bootstrap. Run it 10 times — no errors, no duplicates. 8 phases, zero bloat.
-
-**Design philosophy:**
-- **Fast** — Rust-native tools first (uv, mise, starship, ripgrep, fd, zoxide, eza)
-- **Lean** — no oh-my-zsh, on-demand plugin loading
-- **Stable** — idempotent, network fallback, trap cleanup on interruption
-- **China-friendly** — Aliyun apt mirror, Tsinghua PyPI mirror (skip with `SKIP_APT_MIRROR=1`)
-
-```
-git clone https://github.com/Wind-t/devtoolkit.git ~/.local/share/devtoolkit
-bash ~/.local/share/devtoolkit/bootstrap.sh
-```
-
-> Quick links: [Installation](#快速开始) · [What's Included](#装了啥) · [Verify](#第二步--一键部署) · [Uninstall](#uninstall) · [Troubleshooting](TROUBLESHOOTING.md) · [中文架构文档](docs/ARCHITECTURE-zh.md)
+[English](README.en.md) | 中文
 
 ---
 
