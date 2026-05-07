@@ -11,6 +11,25 @@
 
 ---
 
+## What's This? (English)
+
+A single-command, idempotent WSL Ubuntu dev environment bootstrap. Run it 10 times — no errors, no duplicates. 8 phases, zero bloat.
+
+**Design philosophy:**
+- **Fast** — Rust-native tools first (uv, mise, starship, ripgrep, fd, zoxide, eza)
+- **Lean** — no oh-my-zsh, on-demand plugin loading
+- **Stable** — idempotent, network fallback, trap cleanup on interruption
+- **China-friendly** — Aliyun apt mirror, Tsinghua PyPI mirror (skip with `SKIP_APT_MIRROR=1`)
+
+```
+git clone https://github.com/Wind-t/devtoolkit.git ~/.local/share/devtoolkit
+bash ~/.local/share/devtoolkit/bootstrap.sh
+```
+
+> Quick links: [Installation](#快速开始) · [What's Included](#装了啥) · [Verify](#第二步--一键部署) · [Uninstall](#uninstall) · [Troubleshooting](TROUBLESHOOTING.md) · [中文架构文档](docs/ARCHITECTURE-zh.md)
+
+---
+
 ## 这是什么
 
 一个 idempotent（幂等）的 WSL Ubuntu 开发环境 bootstrap 脚本。分 8 个 phase 渐进式安装，跑十遍不炸。最后链接 dotfiles 到 `$HOME`，重启终端就能干活。
